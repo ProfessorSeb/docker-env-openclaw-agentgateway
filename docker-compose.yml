@@ -36,7 +36,7 @@ services:
     volumes:
       - openclaw-data:/home/node/.openclaw
     environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_API_KEY=sk-dummy
       - OPENCLAW_GATEWAY_TOKEN=${OPENCLAW_GATEWAY_TOKEN:-openclaw-local}
     depends_on:
       - agentgateway
