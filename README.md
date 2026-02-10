@@ -96,16 +96,22 @@ OpenClaw is pre-configured to route all OpenAI API calls through AgentGateway. T
 }
 ```
 
+To launch the OpenClaw TUI (interactive terminal UI):
+
+```bash
+docker compose exec -it openclaw node dist/index.js tui
+```
+
 To run the interactive onboarding wizard (configure messaging channels, etc.):
 
 ```bash
-docker compose exec openclaw openclaw onboard
+docker compose exec -it openclaw node dist/index.js onboard
 ```
 
 To change settings after onboarding:
 
 ```bash
-docker compose exec openclaw openclaw config wizard
+docker compose exec -it openclaw node dist/index.js config wizard
 ```
 
 ## AgentGateway Configuration
