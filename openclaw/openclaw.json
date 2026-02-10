@@ -19,6 +19,7 @@
     "providers": {
       "openai": {
         "baseUrl": "http://agentgateway:3000/v1",
+        "api": "openai-completions",
         "models": []
       }
     }
