@@ -3,7 +3,7 @@ services:
   # AgentGateway - LLM proxy (OpenAI-compatible unified API)
   # ==========================================================
   agentgateway:
-    image: ghcr.io/agentgateway/agentgateway:v0.12.0
+    image: ghcr.io/agentgateway/agentgateway:0.12.0
     container_name: agentgateway
     ports:
       - "3000:3000"       # LLM API endpoint (OpenAI-compatible)
