@@ -13,4 +13,4 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 USER node
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-CMD ["node", "dist/index.js"]
+CMD ["openclaw", "gateway", "--port", "18789"]
