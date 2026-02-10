@@ -1,0 +1,89 @@
+services:
+  # ==========================================================
+  # AgentGateway - LLM proxy (OpenAI-compatible unified API)
+  # ==========================================================
+  agentgateway:
+    image: ghcr.io/agentgateway/agentgateway:v0.12.0
+    container_name: agentgateway
+    ports:
+      - "3000:3000"       # LLM API endpoint (OpenAI-compatible)
+      - "15000:15000"     # Admin UI
+      - "15020:15020"     # Prometheus metrics
+    volumes:
+      - ./agentgateway/config.yaml:/etc/agentgateway/config.yaml
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    depends_on:
+      - jaeger
+    restart: unless-stopped
+
+  # ==========================================================
+  # OpenClaw - AI assistant platform
+  # ==========================================================
+  openclaw:
+    build:
+      context: ./openclaw
+    container_name: openclaw
+    ports:
+      - "18789:18789"     # OpenClaw Gateway web UI
+    volumes:
+      - openclaw-data:/home/node/.openclaw
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    depends_on:
+      - agentgateway
+    restart: unless-stopped
+
+  # ==========================================================
+  # Jaeger - Distributed tracing
+  # ==========================================================
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    ports:
+      - "16686:16686"     # Jaeger UI
+      - "4317:4317"       # OTLP gRPC receiver
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    restart: unless-stopped
+
+  # ==========================================================
+  # Prometheus - Metrics collection
+  # ==========================================================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"       # Prometheus UI
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    depends_on:
+      - agentgateway
+    restart: unless-stopped
+
+  # ==========================================================
+  # Grafana - Dashboards & visualization
+  # ==========================================================
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3001:3000"       # Grafana UI
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+    depends_on:
+      - prometheus
+      - jaeger
+    restart: unless-stopped
+
+volumes:
+  openclaw-data:
+  prometheus-data:
+  grafana-data:

@@ -1,0 +1,19 @@
+{
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "openai": {
+        "baseUrl": "http://agentgateway:3000/v1",
+        "models": []
+      }
+    }
+  },
+  "auth": {
+    "profiles": {
+      "openai:default": {
+        "provider": "openai",
+        "mode": "api_key"
+      }
+    }
+  }
+}
