@@ -80,10 +80,13 @@ After making requests, check:
 
 ## OpenClaw Configuration
 
-OpenClaw is pre-configured to route all OpenAI API calls through AgentGateway. The config lives at `openclaw/openclaw.json`:
+OpenClaw is pre-configured to use `openai/gpt-4.1-nano` as the agent model and route all API calls through AgentGateway. The config lives at `openclaw/openclaw.json`:
 
 ```json
 {
+  "agent": {
+    "model": "openai/gpt-4.1-nano"
+  },
   "models": {
     "mode": "merge",
     "providers": {
