@@ -96,12 +96,15 @@ OpenClaw is pre-configured to use `openai/gpt-4.1-nano` as the agent model and r
     "providers": {
       "openai": {
         "baseUrl": "http://agentgateway:3000/v1",
+        "api": "openai-completions",
         "models": []
       }
     }
   }
 }
 ```
+
+> **Note:** The `"api": "openai-completions"` setting is required because AgentGateway expects the Chat Completions format (`/v1/chat/completions` with a `messages` field). Without it, OpenClaw defaults to the Responses API format which AgentGateway cannot parse.
 
 To launch the OpenClaw TUI (interactive terminal UI):
 
