@@ -84,8 +84,12 @@ OpenClaw is pre-configured to use `openai/gpt-4.1-nano` as the agent model and r
 
 ```json
 {
-  "agent": {
-    "model": "openai/gpt-4.1-nano"
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "openai/gpt-4.1-nano"
+      }
+    }
   },
   "models": {
     "mode": "merge",

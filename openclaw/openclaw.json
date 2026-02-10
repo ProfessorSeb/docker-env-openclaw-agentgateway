@@ -1,6 +1,10 @@
 {
-  "agent": {
-    "model": "openai/gpt-4.1-nano"
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "openai/gpt-4.1-nano"
+      }
+    }
   },
   "gateway": {
     "mode": "local",
