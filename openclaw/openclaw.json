@@ -1,6 +1,11 @@
 {
   "gateway": {
-    "mode": "local"
+    "mode": "local",
+    "bind": "0.0.0.0",
+    "controlUi": {
+      "enabled": true,
+      "allowInsecureAuth": true
+    }
   },
   "models": {
     "mode": "merge",
