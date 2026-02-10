@@ -1,0 +1,26 @@
+# AgentGateway configuration
+# Docs: https://agentgateway.dev/docs/local/latest/tutorials/llm-gateway/
+
+config:
+  tracing:
+    otlpEndpoint: http://jaeger:4317
+    randomSampling: true
+
+binds:
+- port: 3000
+  listeners:
+  - routes:
+    # Default route -> OpenAI
+    - name: openai-default
+      backends:
+      - ai:
+          name: openai
+          provider:
+            openAI:
+              model: gpt-4.1-nano
+      policies:
+        cors:
+          allowOrigins: ["*"]
+          allowHeaders: ["*"]
+        backendAuth:
+          key: "$OPENAI_API_KEY"
