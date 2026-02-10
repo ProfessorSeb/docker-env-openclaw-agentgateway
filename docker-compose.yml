@@ -3,14 +3,13 @@ services:
   # AgentGateway - LLM proxy (OpenAI-compatible unified API)
   # ==========================================================
   agentgateway:
-    image: ghcr.io/agentgateway/agentgateway:0.12.0
+    build:
+      context: ./agentgateway
     container_name: agentgateway
     ports:
       - "3000:3000"       # LLM API endpoint (OpenAI-compatible)
       - "15000:15000"     # Admin UI
       - "15020:15020"     # Prometheus metrics
-    volumes:
-      - ./agentgateway/config.yaml:/etc/agentgateway/config.yaml
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     depends_on:
