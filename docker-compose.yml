@@ -12,6 +12,14 @@ services:
       - "15020:15020"     # Prometheus metrics
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - ./agentgateway/config.yaml:/etc/agentgateway/config.yaml:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
     depends_on:
       - jaeger
     restart: unless-stopped
