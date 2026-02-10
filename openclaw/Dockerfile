@@ -13,4 +13,4 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 USER node
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-CMD ["node", "dist/index.js", "gateway", "--port", "18789"]
+CMD ["node", "dist/index.js", "gateway", "--port", "18789", "--allow-unconfigured"]
