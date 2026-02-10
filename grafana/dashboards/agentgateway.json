@@ -4,128 +4,319 @@
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
   "id": null,
-  "links": [],
+  "links": [
+    {
+      "icon": "external link",
+      "tags": [],
+      "title": "Jaeger Traces",
+      "type": "link",
+      "url": "http://localhost:16686"
+    }
+  ],
   "panels": [
     {
-      "title": "Request Rate (req/s)",
-      "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "targets": [
-        {
-          "expr": "rate(agentgateway_requests_total[5m])",
-          "legendFormat": "{{status}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "reqps",
-          "custom": { "drawStyle": "line", "fillOpacity": 15 }
-        },
-        "overrides": []
-      }
-    },
-    {
-      "title": "Request Duration P99 (s)",
-      "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "targets": [
-        {
-          "expr": "histogram_quantile(0.99, rate(agentgateway_request_duration_seconds_bucket[5m]))",
-          "legendFormat": "p99"
-        },
-        {
-          "expr": "histogram_quantile(0.50, rate(agentgateway_request_duration_seconds_bucket[5m]))",
-          "legendFormat": "p50"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "s",
-          "custom": { "drawStyle": "line", "fillOpacity": 10 }
-        },
-        "overrides": []
-      }
-    },
-    {
-      "title": "Error Rate",
-      "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "targets": [
-        {
-          "expr": "rate(agentgateway_requests_total{status=~\"5..\"}[5m]) / rate(agentgateway_requests_total[5m])",
-          "legendFormat": "error ratio"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "percentunit",
-          "custom": { "drawStyle": "line", "fillOpacity": 20 },
-          "color": { "mode": "fixed", "fixedColor": "red" }
-        },
-        "overrides": []
-      }
-    },
-    {
-      "title": "LLM Token Usage (tokens/s)",
-      "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "targets": [
-        {
-          "expr": "rate(agentgateway_llm_tokens_total[5m])",
-          "legendFormat": "{{type}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "custom": { "drawStyle": "bars", "fillOpacity": 50 }
-        },
-        "overrides": []
-      }
-    },
-    {
-      "title": "Active Connections",
-      "type": "stat",
-      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 16 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "targets": [
-        {
-          "expr": "agentgateway_connections_active",
-          "legendFormat": "connections"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": { "unit": "short" },
-        "overrides": []
-      }
+      "title": "",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "collapsed": false,
+      "panels": []
     },
     {
       "title": "Total Requests",
       "type": "stat",
-      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 16 },
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 1 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [
-        {
-          "expr": "sum(agentgateway_requests_total)",
-          "legendFormat": "total"
-        }
+        { "expr": "sum(agentgateway_requests_total)", "legendFormat": "" }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "short", "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } },
+        "overrides": []
+      },
+      "options": { "colorMode": "value", "graphMode": "none", "textMode": "auto", "reduceOptions": { "calcs": ["lastNotNull"] } }
+    },
+    {
+      "title": "Total LLM Requests",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 1 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "sum(agentgateway_llm_requests_total)", "legendFormat": "" }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "short", "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } },
+        "overrides": []
+      },
+      "options": { "colorMode": "value", "graphMode": "none", "textMode": "auto", "reduceOptions": { "calcs": ["lastNotNull"] } }
+    },
+    {
+      "title": "Active Connections",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 1 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "agentgateway_connections_active", "legendFormat": "" }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "short", "thresholds": { "mode": "absolute", "steps": [{ "color": "purple", "value": null }] } },
+        "overrides": []
+      },
+      "options": { "colorMode": "value", "graphMode": "none", "textMode": "auto", "reduceOptions": { "calcs": ["lastNotNull"] } }
+    },
+    {
+      "title": "Total Tokens (Input)",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 1 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "sum(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"input\"})", "legendFormat": "input" }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "short", "thresholds": { "mode": "absolute", "steps": [{ "color": "orange", "value": null }] } },
+        "overrides": []
+      },
+      "options": { "colorMode": "value", "graphMode": "none", "textMode": "auto", "reduceOptions": { "calcs": ["lastNotNull"] } }
+    },
+    {
+      "title": "Total Tokens (Output)",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 1 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "sum(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"output\"})", "legendFormat": "output" }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "short", "thresholds": { "mode": "absolute", "steps": [{ "color": "yellow", "value": null }] } },
+        "overrides": []
+      },
+      "options": { "colorMode": "value", "graphMode": "none", "textMode": "auto", "reduceOptions": { "calcs": ["lastNotNull"] } }
+    },
+    {
+      "title": "Total Connections",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 20, "y": 1 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "sum(agentgateway_connections_total)", "legendFormat": "" }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "short", "thresholds": { "mode": "absolute", "steps": [{ "color": "super-light-blue", "value": null }] } },
+        "overrides": []
+      },
+      "options": { "colorMode": "value", "graphMode": "none", "textMode": "auto", "reduceOptions": { "calcs": ["lastNotNull"] } }
+    },
+
+    {
+      "title": "Request & LLM Traffic",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 5 },
+      "collapsed": false,
+      "panels": []
+    },
+    {
+      "title": "Request Rate (req/s)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 6 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "sum(rate(agentgateway_requests_total[5m]))", "legendFormat": "all requests" },
+        { "expr": "sum(rate(agentgateway_llm_requests_total[5m]))", "legendFormat": "llm requests" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 15, "pointSize": 5, "showPoints": "auto" }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "title": "Request Duration",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 6 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "histogram_quantile(0.99, sum(rate(agentgateway_request_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p99 (all)" },
+        { "expr": "histogram_quantile(0.50, sum(rate(agentgateway_request_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p50 (all)" },
+        { "expr": "histogram_quantile(0.99, sum(rate(agentgateway_llm_request_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p99 (llm)" },
+        { "expr": "histogram_quantile(0.50, sum(rate(agentgateway_llm_request_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p50 (llm)" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 10 }
+        },
+        "overrides": []
+      }
+    },
+
+    {
+      "title": "Token Usage",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 14 },
+      "collapsed": false,
+      "panels": []
+    },
+    {
+      "title": "Token Rate by Type (tokens/s)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 15 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "sum(rate(agentgateway_llm_tokens_total{gen_ai_token_type=\"input\"}[5m])) or sum(rate(agentgateway_llm_tokens_total[5m])) by (gen_ai_token_type)", "legendFormat": "input" },
+        { "expr": "sum(rate(agentgateway_llm_tokens_total{gen_ai_token_type=\"output\"}[5m])) or vector(0)", "legendFormat": "output" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": { "drawStyle": "bars", "lineWidth": 1, "fillOpacity": 60, "stacking": { "mode": "normal" } }
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "input" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "orange" } }] },
+          { "matcher": { "id": "byName", "options": "output" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "yellow" } }] }
+        ]
+      }
+    },
+    {
+      "title": "Token Usage by Model (cumulative)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 15 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "sum by (gen_ai_request_model) (agentgateway_gen_ai_client_token_usage_sum)", "legendFormat": "{{gen_ai_request_model}}" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 20 }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "title": "Token Distribution by Provider",
+      "type": "piechart",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 23 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "sum by (gen_ai_system) (agentgateway_gen_ai_client_token_usage_sum)", "legendFormat": "{{gen_ai_system}}" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] },
+      "options": { "legend": { "displayMode": "list", "placement": "right" }, "pieType": "donut" }
+    },
+    {
+      "title": "Input vs Output Tokens",
+      "type": "piechart",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 23 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "sum by (gen_ai_token_type) (agentgateway_gen_ai_client_token_usage_sum)", "legendFormat": "{{gen_ai_token_type}}" }
       ],
       "fieldConfig": {
         "defaults": { "unit": "short" },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "input" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "orange" } }] },
+          { "matcher": { "id": "byName", "options": "output" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "yellow" } }] }
+        ]
+      },
+      "options": { "legend": { "displayMode": "list", "placement": "right" }, "pieType": "donut" }
+    },
+
+    {
+      "title": "Network",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 31 },
+      "collapsed": false,
+      "panels": []
+    },
+    {
+      "title": "Request Size",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 32 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "histogram_quantile(0.99, sum(rate(agentgateway_request_size_bytes_bucket[5m])) by (le))", "legendFormat": "p99" },
+        { "expr": "histogram_quantile(0.50, sum(rate(agentgateway_request_size_bytes_bucket[5m])) by (le))", "legendFormat": "p50" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "decbytes",
+          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 10 }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "title": "Response Size",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 32 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "histogram_quantile(0.99, sum(rate(agentgateway_response_size_bytes_bucket[5m])) by (le))", "legendFormat": "p99" },
+        { "expr": "histogram_quantile(0.50, sum(rate(agentgateway_response_size_bytes_bucket[5m])) by (le))", "legendFormat": "p50" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "decbytes",
+          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 10 }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "title": "Error Rate (%)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 40 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "sum(rate(agentgateway_requests_total{status=~\"5..\"}[5m])) / sum(rate(agentgateway_requests_total[5m]))", "legendFormat": "5xx error rate" },
+        { "expr": "sum(rate(agentgateway_requests_total{status=~\"4..\"}[5m])) / sum(rate(agentgateway_requests_total[5m]))", "legendFormat": "4xx error rate" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1,
+          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 20 },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.01 },
+              { "color": "red", "value": 0.05 }
+            ]
+          }
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "5xx error rate" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "red" } }] },
+          { "matcher": { "id": "byName", "options": "4xx error rate" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "orange" } }] }
+        ]
+      }
+    },
+    {
+      "title": "Connections Over Time",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 40 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "expr": "agentgateway_connections_active", "legendFormat": "active" },
+        { "expr": "rate(agentgateway_connections_total[5m])", "legendFormat": "new/s" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 15 }
+        },
         "overrides": []
       }
     }
   ],
   "refresh": "10s",
   "schemaVersion": 39,
-  "tags": ["agentgateway", "llm"],
+  "tags": ["agentgateway", "llm", "openai"],
   "templating": { "list": [] },
   "time": { "from": "now-1h", "to": "now" },
   "title": "AgentGateway LLM Metrics",
   "uid": "agentgateway-llm",
-  "version": 1
+  "version": 2
 }
