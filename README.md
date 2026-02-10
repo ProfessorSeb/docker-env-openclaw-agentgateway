@@ -80,10 +80,13 @@ After making requests, check:
 
 ## OpenClaw Configuration
 
-OpenClaw is pre-configured to route all OpenAI API calls through AgentGateway. The config lives at `openclaw/openclaw.json`:
+OpenClaw is pre-configured to use `openai/gpt-4.1-nano` as the agent model and route all API calls through AgentGateway. The config lives at `openclaw/openclaw.json`:
 
 ```json
 {
+  "agent": {
+    "model": "openai/gpt-4.1-nano"
+  },
   "models": {
     "mode": "merge",
     "providers": {
@@ -96,16 +99,22 @@ OpenClaw is pre-configured to route all OpenAI API calls through AgentGateway. T
 }
 ```
 
+To launch the OpenClaw TUI (interactive terminal UI):
+
+```bash
+docker compose exec -it openclaw node dist/index.js tui
+```
+
 To run the interactive onboarding wizard (configure messaging channels, etc.):
 
 ```bash
-docker compose exec openclaw openclaw onboard
+docker compose exec -it openclaw node dist/index.js onboard
 ```
 
 To change settings after onboarding:
 
 ```bash
-docker compose exec openclaw openclaw config wizard
+docker compose exec -it openclaw node dist/index.js config wizard
 ```
 
 ## AgentGateway Configuration

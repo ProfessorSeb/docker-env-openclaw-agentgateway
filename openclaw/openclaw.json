@@ -1,4 +1,7 @@
 {
+  "agent": {
+    "model": "openai/gpt-4.1-nano"
+  },
   "gateway": {
     "mode": "local",
     "bind": "lan",
